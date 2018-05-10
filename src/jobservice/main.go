@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"flag"
+	"fmt"
 
 	"github.com/vmware/harbor/src/adminserver/client"
 	"github.com/vmware/harbor/src/jobservice/config"
@@ -21,13 +22,15 @@ func main() {
 
 	//Missing config file
 	if configPath == nil || utils.IsEmptyStr(*configPath) {
+		fmt.Println("Config file should be specified")
 		flag.Usage()
-		logger.Fatal("Config file should be specified")
+		return
 	}
 
 	//Load configurations
 	if err := config.DefaultConfig.Load(*configPath, true); err != nil {
-		logger.Fatalf("Failed to load configurations with error: %s\n", err)
+		fmt.Printf("Failed to load configurations with error: %s\n", err)
+		return
 	}
 
 	//Set job context initializer
